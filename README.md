@@ -40,9 +40,8 @@ $ cd `ghq list --full-path | roots | peco`
 
 ## Explore Strategy
 
-First, the root directory is explored. The number of root directories to explore is specified by `--parent` (default: 2).
-
-Next, sub-root directories are explored from the root directory. The number of directories to explore is specified by `--depth` (default: 3).
+1. First, the root directory is explored. The number of root directories to explore is specified by `--parent` (default: 2).
+2. Next, sub-root directories are explored from the root directory. The number of directories to explore is specified by `--depth` (default: 3).
 
 The root directory is determined by checking whether or not the specified file (root file) exists in the target directory.
 
