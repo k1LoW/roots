@@ -1,0 +1,78 @@
+version: 2
+before:
+  hooks:
+    - go mod download
+    - go mod tidy
+builds:
+  -
+    id: roots-darwin
+    ldflags:
+      - -s -w -X github.com/k1LoW/roots.version={{.Version}} -X github.com/k1LoW/roots.commit={{.FullCommit}} -X github.com/k1LoW/roots.date={{.Date}} -X github.com/k1LoW/roots/version.Version={{.Version}}
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - darwin
+    goarch:
+      - amd64
+      - arm64
+  -
+    id: roots-windows
+    ldflags:
+      - -s -w -X github.com/k1LoW/roots.version={{.Version}} -X github.com/k1LoW/roots.commit={{.FullCommit}} -X github.com/k1LoW/roots.date={{.Date}} -X github.com/k1LoW/roots/version.Version={{.Version}}
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - windows
+    goarch:
+      - amd64
+  -
+    id: roots-linux
+    ldflags:
+      - -s -w -X github.com/k1LoW/roots.version={{.Version}} -X github.com/k1LoW/roots.commit={{.FullCommit}} -X github.com/k1LoW/roots.date={{.Date}} -X github.com/k1LoW/roots/version.Version={{.Version}}
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - linux
+    goarch:
+      - amd64
+      - arm64
+archives:
+  -
+    id: roots-archive
+    name_template: '{{ .ProjectName }}_v{{ .Version }}_{{ .Os }}_{{ .Arch }}{{ if .Arm }}v{{ .Arm }}{{ end }}'
+    format_overrides:
+      - goos: darwin
+        formats:
+          - zip
+    files:
+      - LICENSE
+      - CREDITS
+      - README.md
+      - CHANGELOG.md
+checksum:
+  name_template: 'checksums.txt'
+changelog:
+  sort: asc
+  filters:
+    exclude:
+    - '^docs:'
+    - '^test:'
+nfpms:
+  -
+    id: roots-nfpms
+    file_name_template: "{{ .ProjectName }}_{{ .Version }}-1_{{ .Arch }}"
+    builds:
+      - roots-linux
+    homepage: https://github.com/k1LoW/roots
+    maintainer: Ken'ichiro Oyama <k1lowxb@gmail.com>
+    description: roots is a tool for exploring multiple root directories.
+    license: MIT
+    formats:
+      - deb
+      - rpm
+      - apk
+    bindir: /usr/bin
+    epoch: 1
+release:
+  draft: true
+  replace_existing_draft: true
