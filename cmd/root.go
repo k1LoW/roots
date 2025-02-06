@@ -22,6 +22,7 @@ THE SOFTWARE.
 package cmd
 
 import (
+	"fmt"
 	"io"
 	"os"
 	"path/filepath"
@@ -112,7 +113,7 @@ var rootCmd = &cobra.Command{
 				roots = append(roots, filepath.Join(sysRoot, dir))
 			}
 		}
-		cmd.Println(strings.Join(roots, "\n"))
+		fmt.Println(strings.Join(roots, "\n"))
 		return nil
 	},
 }
