@@ -32,6 +32,7 @@ import (
 	"github.com/k1LoW/roots/version"
 	"github.com/mattn/go-isatty"
 	"github.com/spf13/cobra"
+	"golang.org/x/sync/errgroup"
 )
 
 var (
@@ -50,6 +51,7 @@ var (
 		"vendor",
 		"testdata",
 	}
+	fast bool
 )
 
 var rootCmd = &cobra.Command{
@@ -103,17 +105,25 @@ var rootCmd = &cobra.Command{
 		}
 
 		e := explorer.New(os.DirFS(sysRoot), depth, parent, rootFilePaths, ignoreDirs)
-		var roots []string
-		for _, baseDir := range baseDirs {
-			dirs, err := e.ExploreRoots(ctx, baseDir)
-			if err != nil {
-				return err
-			}
-			for _, dir := range dirs {
-				roots = append(roots, filepath.Join(sysRoot, dir))
-			}
+		eg, ctx := errgroup.WithContext(ctx)
+		if !fast {
+			eg.SetLimit(1)
 		}
-		fmt.Println(strings.Join(roots, "\n"))
+		for _, baseDir := range baseDirs {
+			eg.Go(func() error {
+				dirs, err := e.ExploreRoots(ctx, baseDir)
+				if err != nil {
+					return err
+				}
+				for _, dir := range dirs {
+					fmt.Println(filepath.Join(sysRoot, dir))
+				}
+				return nil
+			})
+		}
+		if err := eg.Wait(); err != nil {
+			return err
+		}
 		return nil
 	},
 }
@@ -129,4 +139,5 @@ func init() {
 	rootCmd.Flags().IntVarP(&parent, "parent", "p", 2, "Number of parent root directories to explore")
 	rootCmd.Flags().StringSliceVarP(&rootFiles, "root-file", "", []string{}, "File or directory that exist in the root directory")
 	rootCmd.Flags().StringSliceVarP(&ignoreDirs, "ignore-dir", "", defaultIgnoreDirs, "Directory to ignore")
+	rootCmd.Flags().BoolVarP(&fast, "fast", "", false, "Fast mode")
 }
