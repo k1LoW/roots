@@ -18,3 +18,18 @@ $ roots
 /path/to/src/github.com/fabrix-framework/fabrix/shared/eslint
 /path/to/src/github.com/fabrix-framework/fabrix/shared/prettier
 ```
+
+### With [ghq](https://github.com/x-motemen/ghq)
+
+```console
+$ ghq list --full-path | roots
+```
+
+## My most favorite [The Roots](https://www.theroots.com/) album
+
+[Phrenology](https://en.wikipedia.org/wiki/Phrenology_(album))
+
+## My most favorite [The Roots](https://www.theroots.com/) song
+
+[The Next Movement](https://www.youtube.com/watch?v=qm7Xt2Qsjcg)
+
