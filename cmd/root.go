@@ -86,7 +86,7 @@ var rootCmd = &cobra.Command{
 			if err != nil {
 				return err
 			}
-			for _, dir := range strings.Split(string(b), "\n") {
+			for _, dir := range strings.Split(strings.Trim(string(b), "\n"), "\n") {
 				abs, err := filepath.Abs(dir)
 				if err != nil {
 					return err
@@ -104,7 +104,7 @@ var rootCmd = &cobra.Command{
 		e := explorer.New(os.DirFS(sysRoot), depth, parent, rootFilePaths, ignoreDirs)
 		var roots []string
 		for _, baseDir := range baseDirs {
-			dirs, err := e.ExploreRoots(ctx, strings.TrimLeft(baseDir, sysRoot))
+			dirs, err := e.ExploreRoots(ctx, baseDir)
 			if err != nil {
 				return err
 			}
