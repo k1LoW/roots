@@ -38,6 +38,18 @@ $ roots
 $ ghq list --full-path | roots
 ```
 
+## Explore Strategy
+
+First, the root directory is explored. The number of root directories to explore is specified by `--parent` (default: 2).
+
+Next, sub-root directories are explored from the root directory. The number of directories to explore is specified by `--depth` (default: 3).
+
+The root directory is determined by checking whether or not the specified file (root file) exists in the target directory.
+
+The default root files are `.git/config`, `go.mod`, `package.json`, and `Corgo.toml`.
+
+You can specify multiple root files with `--root-file`.
+
 ## My most favorite [The Roots](https://www.theroots.com/) album
 
 [Phrenology](https://en.wikipedia.org/wiki/Phrenology_(album))
