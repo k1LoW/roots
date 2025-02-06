@@ -58,3 +58,21 @@ You can specify multiple root files with `--root-file`.
 
 [The Next Movement](https://www.youtube.com/watch?v=qm7Xt2Qsjcg)
 
+## Install
+
+**homebrew tap:**
+
+```console
+$ brew install k1LoW/tap/roots
+```
+
+**go install:**
+
+```console
+$ go install github.com/k1LoW/roots@latest
+```
+
+**manually:**
+
+Download binary from [releases page](https://github.com/k1LoW/roots/releases)
+
