@@ -32,10 +32,10 @@ $ roots
 /path/to/src/github.com/fabrix-framework/fabrix/shared/prettier
 ```
 
-### With [ghq](https://github.com/x-motemen/ghq)
+### With [ghq](https://github.com/x-motemen/ghq) and [peco](https://github.com/peco/peco)
 
 ```console
-$ ghq list --full-path | roots
+$ cd $(ghq list --full-path | roots | peco)
 ```
 
 ## Explore Strategy
