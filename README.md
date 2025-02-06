@@ -35,7 +35,7 @@ $ roots
 ### With [ghq](https://github.com/x-motemen/ghq) and [peco](https://github.com/peco/peco)
 
 ```console
-$ cd $(ghq list --full-path | roots | peco)
+$ cd `ghq list --full-path | roots | peco`
 ```
 
 ## Explore Strategy
