@@ -46,7 +46,7 @@ Next, sub-root directories are explored from the root directory. The number of d
 
 The root directory is determined by checking whether or not the specified file (root file) exists in the target directory.
 
-The default root files are `.git/config`, `go.mod`, `package.json`, and `Corgo.toml`.
+The default root files are `.git/config`, `go.mod`, `package.json`, and `Cargo.toml`.
 
 You can specify multiple root files with `--root-file`.
 
