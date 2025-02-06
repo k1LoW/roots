@@ -57,7 +57,7 @@ var (
 var rootCmd = &cobra.Command{
 	Use:          "roots",
 	Short:        "roots is a tool for exploring multiple root directories",
-	Long:         "roots is a tool for exploring multiple root directories.",
+	Long:         "roots is a tool for exploring multiple root directories, such as those in a monorepo project.",
 	Version:      version.Version,
 	SilenceUsage: true,
 	Args:         cobra.MaximumNArgs(1),

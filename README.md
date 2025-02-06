@@ -1,6 +1,6 @@
 # roots
 
-`roots` is a tool for exploring multiple root directories.
+`roots` is a tool for exploring multiple root directories, such as those in a monorepo project.
 
 ## Usage
 
