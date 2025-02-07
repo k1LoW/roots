@@ -40,6 +40,7 @@ var (
 	parent               int
 	rootFiles            []string
 	ignoreDirs           []string
+	parentDirs           []string
 	defaultRootFilePaths [][]string = [][]string{
 		{".git", "config"}, // .git/config is a file that exists in the root directory of a Git project
 		{"go.mod"},         // go.mod is a file that exists in the root directory of a Go project
@@ -69,11 +70,17 @@ var rootCmd = &cobra.Command{
 		}
 		var baseDirs []string
 		var rootFilePaths [][]string
+		var parentDirPaths [][]string
 		if len(rootFiles) == 0 {
 			rootFilePaths = defaultRootFilePaths
 		} else {
 			for _, rf := range rootFiles {
 				rootFilePaths = append(rootFilePaths, strings.Split(rf, string(filepath.Separator)))
+			}
+		}
+		if len(parentDirs) > 0 {
+			for _, pd := range parentDirs {
+				parentDirPaths = append(parentDirPaths, strings.Split(pd, string(filepath.Separator)))
 			}
 		}
 
@@ -104,7 +111,7 @@ var rootCmd = &cobra.Command{
 			baseDirs = []string{wd}
 		}
 
-		e := explorer.New(os.DirFS(sysRoot), depth, parent, rootFilePaths, ignoreDirs)
+		e := explorer.New(os.DirFS(sysRoot), depth, parent, rootFilePaths, parentDirPaths, ignoreDirs)
 		eg, ctx := errgroup.WithContext(ctx)
 		if !fast {
 			eg.SetLimit(1)
@@ -139,5 +146,6 @@ func init() {
 	rootCmd.Flags().IntVarP(&parent, "parent", "p", 2, "Number of parent root directories to explore")
 	rootCmd.Flags().StringSliceVarP(&rootFiles, "root-file", "", []string{}, "File or directory that exist in the root directory")
 	rootCmd.Flags().StringSliceVarP(&ignoreDirs, "ignore-dir", "", defaultIgnoreDirs, "Directory to ignore")
+	rootCmd.Flags().StringSliceVarP(&parentDirs, "parent-dir", "", []string{}, "Directory that exists as a parent directory of the root directory")
 	rootCmd.Flags().BoolVarP(&fast, "fast", "", false, "Fast mode")
 }
