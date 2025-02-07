@@ -71,7 +71,12 @@ $ brew install k1LoW/tap/roots
 $ go install github.com/k1LoW/roots@latest
 ```
 
+**[aqua](https://aquaproj.github.io/):**
+
+```console
+$ aqua g -i k1LoW/roots
+```
+
 **manually:**
 
 Download binary from [releases page](https://github.com/k1LoW/roots/releases)
-
