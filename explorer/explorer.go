@@ -16,10 +16,11 @@ type Explorer struct {
 	depth      int
 	parent     int
 	rootFiles  [][]string
+	parentDirs [][]string
 	ignoreDirs []string
 }
 
-func New(fsys fs.FS, depth int, parent int, rootFiles [][]string, ignoreDirs []string) *Explorer {
+func New(fsys fs.FS, depth int, parent int, rootFiles, parentDirs [][]string, ignoreDirs []string) *Explorer {
 	sysRoot := os.Getenv("SystemDrive")
 	if sysRoot == "" {
 		sysRoot = "/"
@@ -30,6 +31,7 @@ func New(fsys fs.FS, depth int, parent int, rootFiles [][]string, ignoreDirs []s
 		depth:      depth,
 		parent:     parent,
 		rootFiles:  rootFiles,
+		parentDirs: parentDirs,
 		ignoreDirs: ignoreDirs,
 	}
 }
@@ -51,14 +53,26 @@ func (e *Explorer) ExploreRoots(ctx context.Context, baseDir string) ([]string, 
 		if current == filepath.Dir(current) {
 			break
 		}
-		for _, rf := range e.rootFiles {
-			fp := filepath.Join(append([]string{current}, rf...)...)
-			if _, err := fs.Stat(e.fsys, fp); err == nil {
-				root = current
-				parent--
-				break
+		func() {
+			for _, rf := range e.rootFiles {
+				fp := filepath.Join(append([]string{current}, rf...)...)
+				if _, err := fs.Stat(e.fsys, fp); err == nil {
+					root = current
+					parent--
+					return
+				}
 			}
-		}
+			for _, pd := range e.parentDirs {
+				d := filepath.Join(pd...)
+				if strings.HasSuffix(filepath.Dir(current), d) {
+					if _, err := fs.Stat(e.fsys, filepath.Dir(current)); err == nil {
+						root = current
+						parent--
+						return
+					}
+				}
+			}
+		}()
 		if parent == 0 {
 			break
 		}
@@ -84,13 +98,24 @@ func (e *Explorer) exploreRootsFromRoot(ctx context.Context, root string, depth 
 	if depth == 0 || root == "" {
 		return nil, nil
 	}
-	for _, rf := range e.rootFiles {
-		fp := filepath.Join(append([]string{root}, rf...)...)
-		if _, err := fs.Stat(e.fsys, fp); err == nil {
-			roots = append(roots, root)
-			break
+	func() {
+		for _, rf := range e.rootFiles {
+			fp := filepath.Join(append([]string{root}, rf...)...)
+			if _, err := fs.Stat(e.fsys, fp); err == nil {
+				roots = append(roots, root)
+				return
+			}
+			for _, pd := range e.parentDirs {
+				d := filepath.Join(pd...)
+				if strings.HasSuffix(filepath.Dir(root), d) {
+					if _, err := fs.Stat(e.fsys, filepath.Dir(root)); err == nil {
+						roots = append(roots, root)
+						return
+					}
+				}
+			}
 		}
-	}
+	}()
 	entries, err := fs.ReadDir(e.fsys, root)
 	if err != nil {
 		return nil, err
