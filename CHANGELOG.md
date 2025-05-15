@@ -1,5 +1,7 @@
 # Changelog
 
+## [v0.3.2](https://github.com/k1LoW/roots/compare/v0.3.1...v0.3.2) - 2025-05-15
+
 ## [v0.3.1](https://github.com/k1LoW/roots/compare/v0.3.0...v0.3.1) - 2025-05-14
 ### Other Changes
 - docs: add install method for aqua by @ponkio-o in https://github.com/k1LoW/roots/pull/8
