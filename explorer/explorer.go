@@ -23,19 +23,19 @@ type Explorer struct {
 	ignoreDirs []string
 }
 
-// Config holds configuration for concurrent processing
+// Config holds configuration for concurrent processing.
 type Config struct {
 	MaxWorkers int // worker pool size (default: runtime.NumCPU() * 2)
 	BufferSize int // channel buffer size (default: 100)
 }
 
-// explorationJob represents a single directory exploration task
+// explorationJob represents a single directory exploration task.
 type explorationJob struct {
 	root  string
 	depth int
 }
 
-// explorationResult represents the result of a directory exploration
+// explorationResult represents the result of a directory exploration.
 type explorationResult struct {
 	roots []string
 	err   error
@@ -57,7 +57,7 @@ func New(fsys fs.FS, depth int, parent int, rootFiles, parentDirs [][]string, ig
 	}
 }
 
-// defaultConfig returns default concurrency configuration
+// defaultConfig returns default concurrency configuration.
 func defaultConfig() Config {
 	return Config{
 		MaxWorkers: runtime.NumCPU() * 2,
@@ -78,10 +78,7 @@ func (e *Explorer) ExploreRoots(ctx context.Context, baseDir string) ([]string, 
 	// Explore parent root directories
 	var root string
 	parent := e.parent
-	for {
-		if current == filepath.Dir(current) {
-			break
-		}
+	for current != filepath.Dir(current) {
 		func() {
 			for _, rf := range e.rootFiles {
 				fp := filepath.Join(append([]string{current}, rf...)...)
@@ -123,7 +120,7 @@ func (e *Explorer) ExploreRoots(ctx context.Context, baseDir string) ([]string, 
 	return roots, nil
 }
 
-// exploreRootsFromRootConcurrent explores root directories concurrently using worker pool
+// exploreRootsFromRootConcurrent explores root directories concurrently using worker pool.
 func (e *Explorer) exploreRootsFromRootConcurrent(ctx context.Context, root string, depth int, config Config) ([]string, error) {
 	if depth == 0 || root == "" {
 		return nil, nil
@@ -222,7 +219,7 @@ func (e *Explorer) exploreRootsFromRootConcurrent(ctx context.Context, root stri
 	return allRoots, nil
 }
 
-// worker processes exploration jobs
+// worker processes exploration jobs.
 func (e *Explorer) worker(ctx context.Context, jobs <-chan explorationJob, results chan<- explorationResult, config Config) {
 	for job := range jobs {
 		select {
