@@ -1,5 +1,11 @@
 # Changelog
 
+## [v0.4.0](https://github.com/k1LoW/roots/compare/v0.3.1...v0.4.0) - 2025-06-25
+### New Features 🎉
+- feat(explorer): add concurrent directory exploration with worker pool by @k1LoW in https://github.com/k1LoW/roots/pull/15
+### Other Changes
+- chore(deps): bump golang.org/x/sync from 0.12.0 to 0.14.0 in the dependencies group by @dependabot in https://github.com/k1LoW/roots/pull/14
+
 ## [v0.3.1](https://github.com/k1LoW/roots/compare/v0.3.0...v0.3.1) - 2025-05-14
 ### Other Changes
 - docs: add install method for aqua by @ponkio-o in https://github.com/k1LoW/roots/pull/8
