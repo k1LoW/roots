@@ -1,5 +1,14 @@
 # Changelog
 
+## [v0.4.1](https://github.com/k1LoW/roots/compare/v0.4.0...v0.4.1) - 2025-12-22
+### Other Changes
+- chore(deps): bump the dependencies group across 1 directory with 2 updates by @dependabot[bot] in https://github.com/k1LoW/roots/pull/19
+- chore(deps): bump the dependencies group across 1 directory with 2 updates by @dependabot[bot] in https://github.com/k1LoW/roots/pull/18
+- chore: setup tagpr labels by @k1LoW in https://github.com/k1LoW/roots/pull/22
+- chore(deps): bump actions/checkout from 5 to 6 in the dependencies group by @dependabot[bot] in https://github.com/k1LoW/roots/pull/24
+- chore(deps): bump the dependencies group across 1 directory with 2 updates by @dependabot[bot] in https://github.com/k1LoW/roots/pull/25
+- chore(deps): bump golang.org/x/sync from 0.18.0 to 0.19.0 in the dependencies group by @dependabot[bot] in https://github.com/k1LoW/roots/pull/26
+
 ## [v0.4.0](https://github.com/k1LoW/roots/compare/v0.3.1...v0.4.0) - 2025-06-25
 ### New Features 🎉
 - feat(explorer): add concurrent directory exploration with worker pool by @k1LoW in https://github.com/k1LoW/roots/pull/15
