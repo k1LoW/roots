@@ -33,6 +33,7 @@ type Config struct {
 type explorationJob struct {
 	root  string
 	depth int
+	cache *gitignoreCache
 }
 
 // explorationResult represents the result of a directory exploration.
@@ -108,8 +109,9 @@ func (e *Explorer) ExploreRoots(ctx context.Context, baseDir string) ([]string, 
 	// Explore child root directories
 	depth := e.depth
 	root = strings.TrimLeft(root, e.sysRoot)
+	cache := newGitignoreCache(e.fsys, root)
 	config := defaultConfig()
-	roots, err := e.exploreRootsFromRootConcurrent(ctx, root, depth, config)
+	roots, err := e.exploreRootsFromRootConcurrent(ctx, root, depth, cache, config)
 	if err != nil {
 		return nil, err
 	}
@@ -121,7 +123,7 @@ func (e *Explorer) ExploreRoots(ctx context.Context, baseDir string) ([]string, 
 }
 
 // exploreRootsFromRootConcurrent explores root directories concurrently using worker pool.
-func (e *Explorer) exploreRootsFromRootConcurrent(ctx context.Context, root string, depth int, config Config) ([]string, error) {
+func (e *Explorer) exploreRootsFromRootConcurrent(ctx context.Context, root string, depth int, cache *gitignoreCache, config Config) ([]string, error) {
 	if depth == 0 || root == "" {
 		return nil, nil
 	}
@@ -154,11 +156,17 @@ func (e *Explorer) exploreRootsFromRootConcurrent(ctx context.Context, root stri
 
 	// Filter and collect subdirectories
 	var subdirs []string
+	rel := relToRepo(root, cache.repoRoot)
+	matcher := cache.matcherForDir(rel)
 	for _, entry := range entries {
 		if !entry.IsDir() {
 			continue
 		}
 		if slices.Contains(e.ignoreDirs, entry.Name()) {
+			continue
+		}
+		pathParts := splitPath(filepath.Join(rel, entry.Name()))
+		if matcher.Match(pathParts, true) {
 			continue
 		}
 		subdirs = append(subdirs, filepath.Join(root, entry.Name()))
@@ -191,7 +199,7 @@ func (e *Explorer) exploreRootsFromRootConcurrent(ctx context.Context, root stri
 		defer close(jobs)
 		for _, subdir := range subdirs {
 			select {
-			case jobs <- explorationJob{root: subdir, depth: depth - 1}:
+			case jobs <- explorationJob{root: subdir, depth: depth - 1, cache: cache}:
 			case <-ctx.Done():
 				return
 			}
@@ -226,8 +234,19 @@ func (e *Explorer) worker(ctx context.Context, jobs <-chan explorationJob, resul
 		case <-ctx.Done():
 			return
 		default:
-			roots, err := e.exploreRootsFromRootConcurrent(ctx, job.root, job.depth, config)
+			roots, err := e.exploreRootsFromRootConcurrent(ctx, job.root, job.depth, job.cache, config)
 			results <- explorationResult{roots: roots, err: err}
 		}
 	}
+}
+
+func relToRepo(path string, repoRoot string) string {
+	if repoRoot == "" || path == repoRoot {
+		return ""
+	}
+	rel, err := filepath.Rel(repoRoot, path)
+	if err != nil || strings.HasPrefix(rel, "..") {
+		return ""
+	}
+	return rel
 }

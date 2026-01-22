@@ -49,6 +49,8 @@ The default root files are `.git/config`, `go.mod`, `package.json`, and `Cargo.t
 
 You can specify multiple root files with `--root-file`.
 
+Directories matched by `.gitignore` are excluded during exploration.
+
 ## My most favorite [The Roots](https://www.theroots.com/) album
 
 [Phrenology](https://en.wikipedia.org/wiki/Phrenology_(album))

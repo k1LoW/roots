@@ -12,6 +12,8 @@ func TestExplorr(t *testing.T) {
 	fsys := fstest.MapFS{
 		"path/to/dir/file0":                         &fstest.MapFile{},
 		"path/to/dir/.git/config":                   &fstest.MapFile{},
+		"path/to/dir/.gitignore":                    &fstest.MapFile{Data: []byte(".wt/\n")},
+		"path/to/dir/.wt/test-1/.git/config":        &fstest.MapFile{},
 		"path/to/dir/pkg/foo/path/file1":            &fstest.MapFile{},
 		"path/to/dir/pkg/foo/package.json":          &fstest.MapFile{},
 		"path/to/dir/pkg/bar/path/file2":            &fstest.MapFile{},
@@ -77,6 +79,14 @@ func TestExplorr(t *testing.T) {
 			parentDirs: [][]string{{"pkg"}},
 			baseDir:    "/path/to/dir/pkg/foo",
 			want:       []string{"path/to/dir", "path/to/dir/pkg/bar", "path/to/dir/pkg/foo"},
+		},
+		{
+			name:      "Ignore gitignored directory",
+			depth:     3,
+			parent:    2,
+			rootFiles: [][]string{{".git", "config"}},
+			baseDir:   "/path/to/dir",
+			want:      []string{"path/to/dir"},
 		},
 	}
 	for _, tt := range tests {
