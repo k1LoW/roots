@@ -42,6 +42,7 @@ var (
 	ignoreDirs           []string
 	parentDirs           []string
 	defaultRootFilePaths [][]string = [][]string{
+		{".git"},           // .git is a directory (normal repo) or a file (worktree) in the root of a Git project
 		{".git", "config"}, // .git/config is a file that exists in the root directory of a Git project
 		{"go.mod"},         // go.mod is a file that exists in the root directory of a Go project
 		{"package.json"},   // package.json is a file that exists in the root directory of a Node.js project

@@ -13,6 +13,7 @@ func TestExplorr(t *testing.T) {
 		"path/to/dir/file0":                         &fstest.MapFile{},
 		"path/to/dir/.git/config":                   &fstest.MapFile{},
 		"path/to/dir/.gitignore":                    &fstest.MapFile{Data: []byte(".wt/\n")},
+		"path/to/dir/.wt/test-1/.git":               &fstest.MapFile{},
 		"path/to/dir/.wt/test-1/.git/config":        &fstest.MapFile{},
 		"path/to/dir/pkg/foo/path/file1":            &fstest.MapFile{},
 		"path/to/dir/pkg/foo/package.json":          &fstest.MapFile{},
@@ -37,6 +38,14 @@ func TestExplorr(t *testing.T) {
 			rootFiles: [][]string{{".git", "config"}},
 			baseDir:   "/path/to/dir",
 			want:      []string{"path/to/dir"},
+		},
+		{
+			name:      "Detects root directory (.git file)",
+			depth:     3,
+			parent:    2,
+			rootFiles: [][]string{{".git"}},
+			baseDir:   "/path/to/dir/.wt/test-1",
+			want:      []string{"path/to/dir/.wt/test-1"},
 		},
 		{
 			name:      "Explore parent directories to find root directories",

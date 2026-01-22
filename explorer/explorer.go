@@ -83,8 +83,13 @@ func (e *Explorer) ExploreRoots(ctx context.Context, baseDir string) ([]string, 
 		func() {
 			for _, rf := range e.rootFiles {
 				fp := filepath.Join(append([]string{current}, rf...)...)
-				if _, err := fs.Stat(e.fsys, fp); err == nil {
+				if fi, err := fs.Stat(e.fsys, fp); err == nil {
 					root = current
+					if len(rf) == 1 && rf[0] == ".git" && !fi.IsDir() {
+						// Worktree .git is a file; treat as terminal root.
+						parent = 0
+						return
+					}
 					parent--
 					return
 				}
