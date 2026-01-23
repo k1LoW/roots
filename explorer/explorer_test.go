@@ -15,9 +15,11 @@ func TestExplorr(t *testing.T) {
 		"path/to/dir/.gitignore":                    &fstest.MapFile{Data: []byte(".wt/\n")},
 		"path/to/dir/.wt/test-1/.git":               &fstest.MapFile{},
 		"path/to/dir/.wt/test-1/.git/config":        &fstest.MapFile{},
+		"path/to/dir/.wt/test-1/packages/foo/package.json": &fstest.MapFile{},
 		"path/to/dir/pkg/foo/path/file1":            &fstest.MapFile{},
 		"path/to/dir/pkg/foo/package.json":          &fstest.MapFile{},
 		"path/to/dir/pkg/bar/path/file2":            &fstest.MapFile{},
+		"path/to/dir/pkg/bar/package.json":          &fstest.MapFile{},
 		"path/to/dir/node_modules/baz/package.json": &fstest.MapFile{},
 	}
 
@@ -48,6 +50,14 @@ func TestExplorr(t *testing.T) {
 			want:      []string{"path/to/dir/.wt/test-1"},
 		},
 		{
+			name:      "Worktree root does not include parent roots",
+			depth:     3,
+			parent:    2,
+			rootFiles: [][]string{{".git"}, {"package.json"}},
+			baseDir:   "/path/to/dir/.wt/test-1",
+			want:      []string{"path/to/dir/.wt/test-1", "path/to/dir/.wt/test-1/packages/foo"},
+		},
+		{
 			name:      "Explore parent directories to find root directories",
 			depth:     1,
 			parent:    1,
@@ -69,7 +79,7 @@ func TestExplorr(t *testing.T) {
 			parent:    2,
 			rootFiles: [][]string{{".git", "config"}, {"package.json"}},
 			baseDir:   "/path/to/dir",
-			want:      []string{"path/to/dir", "path/to/dir/node_modules/baz", "path/to/dir/pkg/foo"},
+			want:      []string{"path/to/dir", "path/to/dir/node_modules/baz", "path/to/dir/pkg/bar", "path/to/dir/pkg/foo"},
 		},
 		{
 			name:       "Ignore node_modules directory",
@@ -78,7 +88,7 @@ func TestExplorr(t *testing.T) {
 			rootFiles:  [][]string{{".git", "config"}, {"package.json"}},
 			ignoreDirs: []string{"node_modules"},
 			baseDir:    "/path/to/dir",
-			want:       []string{"path/to/dir", "path/to/dir/pkg/foo"},
+			want:       []string{"path/to/dir", "path/to/dir/pkg/bar", "path/to/dir/pkg/foo"},
 		},
 		{
 			name:       "Include directory that has 'pkg' parent directory",
