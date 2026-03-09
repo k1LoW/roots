@@ -1,5 +1,10 @@
 # Changelog
 
+## [v0.4.2](https://github.com/k1LoW/roots/compare/v0.4.1...v0.4.2) - 2026-03-09
+### Other Changes
+- chore(deps): bump goreleaser/goreleaser-action from 6 to 7 in the dependencies group by @dependabot[bot] in https://github.com/k1LoW/roots/pull/29
+- chore(deps): bump golang.org/x/sync from 0.19.0 to 0.20.0 in the dependencies group by @dependabot[bot] in https://github.com/k1LoW/roots/pull/31
+
 ## [v0.4.1](https://github.com/k1LoW/roots/compare/v0.4.0...v0.4.1) - 2025-12-22
 ### Other Changes
 - chore(deps): bump the dependencies group across 1 directory with 2 updates by @dependabot[bot] in https://github.com/k1LoW/roots/pull/19
