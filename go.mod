@@ -4,9 +4,9 @@ go 1.26.8
 
 require (
 	github.com/google/go-cmp v0.7.0
-	github.com/mattn/go-isatty v0.0.23
+	github.com/mattn/go-isatty v0.0.24
 	github.com/spf13/cobra v1.10.2
-	golang.org/x/sync v0.22.0
+	golang.org/x/sync v0.23.0
 )
 
 require (
